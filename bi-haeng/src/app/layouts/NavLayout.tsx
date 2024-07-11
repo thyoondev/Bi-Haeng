@@ -2,7 +2,7 @@ import { Button } from "@/shared/ui/button";
 import { DarkModeToggle } from "@/shared/ui/darkModeToggle";
 import { TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { Tooltip } from "@radix-ui/react-tooltip";
-import { Map, Plane, SquareUser } from "lucide-react";
+import { Map, Plane } from "lucide-react";
 
 const NavLayout = () => {
   return (
@@ -36,21 +36,6 @@ const NavLayout = () => {
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             Theme
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mt-auto rounded-lg"
-              aria-label="Account"
-            >
-              <SquareUser className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Account
           </TooltipContent>
         </Tooltip>
       </nav>

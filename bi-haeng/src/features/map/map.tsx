@@ -49,15 +49,6 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     mapboxgl.accessToken = process.env
       .NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
-    if (
-      !flightData ||
-      !arrivalAirportData ||
-      !origin?.length ||
-      !destination?.length ||
-      !route.features[0]
-    )
-      return;
-
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style:
@@ -71,6 +62,15 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     // remove mapbox logo
     mapContainer.current.querySelector(".mapboxgl-ctrl-logo").remove();
     mapContainer.current.querySelector(".mapboxgl-ctrl-attrib").remove();
+
+    if (
+      !flightData ||
+      !arrivalAirportData ||
+      !origin?.length ||
+      !destination?.length ||
+      !route.features[0]
+    )
+      return;
 
     //경로 그리기 참고 https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/
 

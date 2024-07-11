@@ -48,10 +48,7 @@ const OverView = () => {
 
   return (
     <>
-      <div
-        className="relative hidden flex-col items-start gap-8 md:flex"
-        x-chunk="dashboard-03-chunk-0"
-      >
+      <div className="relative flex-col items-start gap-8 md:flex">
         <form className="grid w-full items-start gap-6">
           <FlightSelect setSelectedFlight={setSelectedFlight} />
           {flightData && <FlightInfo data={flightData} />}

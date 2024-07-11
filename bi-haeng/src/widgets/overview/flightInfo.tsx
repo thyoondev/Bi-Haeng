@@ -15,6 +15,7 @@ import {
 } from "@/shared/ui/card";
 import { Separator } from "@/shared/ui/separator";
 import { Copy } from "lucide-react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
   const { aircraft, arrival, flight, departure, geography, speed, system } =
@@ -26,14 +27,18 @@ const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
             {flight?.iataNumber || flight?.icaoNumber || "N/A"}
-            <Button
-              size="icon"
-              variant="outline"
-              className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+            <CopyToClipboard
+              text={flight?.iataNumber || flight?.icaoNumber || "N/A"}
             >
-              <Copy className="h-3 w-3" />
-              <span className="sr-only">Copy Flight Number</span>
-            </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <Copy className="h-3 w-3" />
+                <span className="sr-only">Copy Flight Number</span>
+              </Button>
+            </CopyToClipboard>
           </CardTitle>
           <CardDescription>{flight?.icaoNumber || ""}</CardDescription>
         </div>
