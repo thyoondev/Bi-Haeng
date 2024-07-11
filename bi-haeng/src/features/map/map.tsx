@@ -9,21 +9,18 @@ const Map = () => {
   const map = useRef<mapboxgl.Map | any>(null);
 
   useEffect(() => {
-    mapboxgl.accessToken =
-      "pk.eyJ1IjoiMHhqYWRlbiIsImEiOiJjbHh5MmtrN3kwOHRlMnFvandjY2dvZzUwIn0.BvuPkHpQT1GScP5vLRadVQ";
+    mapboxgl.accessToken = process.env
+      .NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr",
-      center: [127.02761, 37.498095],
-      zoom: 5,
+      center: [-149.496, 48.8915],
+      zoom: 3,
     });
 
     map.current.on("load", () => {
-      map.current.addSource("places", {
-        // This GeoJSON contains features that include an "icon"
-        // property. The value of the "icon" property corresponds
-        // to an image in the Mapbox Streets style's sprite.
+      map.current.addSource("planes", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
@@ -31,66 +28,13 @@ const Map = () => {
             {
               geometry: {
                 type: "Point",
-                coordinates: [-77.4918, 39.0395],
+                coordinates: [-149.496, 48.8915],
               },
               type: "Feature",
               properties: {
-                description: "Virginia, United States",
-                title: "degenwtf.eth",
-                url: "https://warpcast.com/degenwtf.eth",
-                version: "v0.1",
-              },
-            },
-            {
-              geometry: {
-                type: "Point",
-                coordinates: [-77.4918, 39.0395],
-              },
-              type: "Feature",
-              properties: {
-                description: "Virginia, United States",
-                title: "mentats.eth",
-                url: "https://warpcast.com/mentats.eth",
-                version: "v0.1",
-              },
-            },
-            {
-              geometry: {
-                type: "Point",
-                coordinates: [127.4424, 37.2792],
-              },
-              type: "Feature",
-              properties: {
-                description: "Seoul, South Korea",
-                title: "FG-9",
-                url: "null",
-                version: "v0.1",
-              },
-            },
-            {
-              geometry: {
-                type: "Point",
-                coordinates: [127.4424, 37.2792],
-              },
-              type: "Feature",
-              properties: {
-                description: "Seoul, South Korea",
-                title: "FG-9",
-                url: "null",
-                version: "v0.1",
-              },
-            },
-            {
-              geometry: {
-                type: "Point",
-                coordinates: [103.8503, 1.29],
-              },
-              type: "Feature",
-              properties: {
-                description: "Singapore",
-                title: "jiri123.eth",
-                url: "https://warpcast.com/jiri123.eth",
-                version: "v0.1",
+                description:
+                  '<strong>Truckeroo</strong><p><a href="http://www.truckeroodc.com/www/" target="_blank">Truckeroo</a> brings dozens of food trucks, live music, and games to half and M Street SE (across from Navy Yard Metro Station) today from 11:00 a.m. to 11:00 p.m.</p>',
+                icon: "airport",
               },
             },
           ],
@@ -98,40 +42,42 @@ const Map = () => {
       });
 
       map.current.addLayer({
-        id: "places",
-        type: "circle",
-        paint: {
-          "circle-radius": 8,
-          "circle-color": "#f3b2ff",
-          // "circle-stroke-width": 2,
-          // "circle-stroke-color": "#fff",
+        id: "planes",
+        type: "symbol",
+        source: "planes",
+        layout: {
+          "icon-image": ["get", "icon"],
+          "icon-allow-overlap": true,
+          "icon-rotate": 110,
         },
-        source: "places",
       });
     });
 
-    map.current.on("click", "places", (e: any) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const description = e.features[0].properties.description;
+    // click event
 
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
+    // map.current.on("click", "places", (e: any) => {
+    //   const coordinates = e.features[0].geometry.coordinates.slice();
+    //   const description = e.features[0].properties.description;
 
-      new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML(description)
-        .addTo(map.current);
-    });
+    //   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+    //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    //   }
 
-    map.current.on("mouseenter", "places", () => {
-      map.current.getCanvas().style.cursor = "pointer";
-    });
+    //   new mapboxgl.Popup()
+    //     .setLngLat(coordinates)
+    //     .setHTML(description)
+    //     .addTo(map.current);
+    // });
 
-    map.current.on("mouseleave", "places", () => {
-      map.current.getCanvas().style.cursor = "";
-    });
+    // map.current.on("mouseenter", "places", () => {
+    //   map.current.getCanvas().style.cursor = "pointer";
+    // });
 
+    // map.current.on("mouseleave", "places", () => {
+    //   map.current.getCanvas().style.cursor = "";
+    // });
+
+    // remove mapbox logo
     mapContainer.current.querySelector(".mapboxgl-ctrl-logo").remove();
     mapContainer.current.querySelector(".mapboxgl-ctrl-attrib").remove();
 
