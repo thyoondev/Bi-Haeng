@@ -58,7 +58,7 @@ export const GetFlightIcaoData = () => {
   const { data, isLoading, refetch } = useQuery<FlightData | undefined, Error>({
     queryKey: ["getFlightIcaoData"],
     queryFn: async () => {
-      const url = `/api/flights?flightIcao=APZ101`;
+      const url = `/api/flights?flightIcao=APZ131`;
       const response = await axios(url);
       if (response.status !== 200) {
         throw new Error("Network response was not ok");

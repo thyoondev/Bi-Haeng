@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/shared/ui/card";
 import { Separator } from "@/shared/ui/separator";
-import { Copy, Plane } from "lucide-react";
+import { Copy } from "lucide-react";
 
 const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
   const { aircraft, arrival, flight, departure, geography, speed, system } =
@@ -38,12 +38,12 @@ const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
           <CardDescription>{flight?.icaoNumber || ""}</CardDescription>
         </div>
         <div className="ml-auto flex items-center gap-1">
-          <Button size="sm" variant="outline" className="h-8 gap-1">
+          {/* <Button size="sm" variant="outline" className="h-8 gap-1">
             <Plane className="h-3.5 w-3.5" />
             <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
               Track on Map
             </span>
-          </Button>
+          </Button> */}
         </div>
       </CardHeader>
       <CardContent className="p-6 text-sm">
