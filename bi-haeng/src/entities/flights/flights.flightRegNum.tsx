@@ -54,11 +54,18 @@ export interface FlightData {
   system: System;
 }
 
-export const GetFlightIcaoData = () => {
+interface FlightDataProps {
+  regNum?: string;
+}
+
+export const GetFlightData = ({ regNum }: FlightDataProps) => {
   const { data, isLoading, refetch } = useQuery<FlightData | undefined, Error>({
-    queryKey: ["getFlightIcaoData"],
+    queryKey: ["getFlightData"],
     queryFn: async () => {
-      const url = `/api/flights?flightIcao=APZ131`;
+      if (!regNum) {
+        return;
+      }
+      const url = `/api/flights?regNum=${regNum}`;
       const response = await axios(url);
       if (response.status !== 200) {
         throw new Error("Network response was not ok");

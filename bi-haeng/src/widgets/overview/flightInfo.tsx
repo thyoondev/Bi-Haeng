@@ -1,9 +1,9 @@
-import { FlightData } from "@/entities/flights/flights.flightIcao";
-import AircraftDetails from "@/features/flightInfo/flightInfo.AircraftDetails";
-import GeographyDetails from "@/features/flightInfo/flightInfo.GeographyDetails";
-import LocationDetails from "@/features/flightInfo/flightInfo.LocationDetails";
-import SpeedDetails from "@/features/flightInfo/flightInfo.SpeedDetails";
-import UpdatedAt from "@/features/flightInfo/flightInfo.UpdatedAt";
+import { FlightData } from "@/entities/flights/flights.flightRegNum";
+import AircraftDetails from "@/features/overview/flightInfo.AircraftDetails";
+import GeographyDetails from "@/features/overview/flightInfo.GeographyDetails";
+import LocationDetails from "@/features/overview/flightInfo.LocationDetails";
+import SpeedDetails from "@/features/overview/flightInfo.SpeedDetails";
+import UpdatedAt from "@/features/overview/flightInfo.UpdatedAt";
 import { Button } from "@/shared/ui/button";
 import {
   Card,

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { FlightData } from "@/entities/flights/flights.flightIcao";
+import { FlightData } from "@/entities/flights/flights.flightRegNum";
 import * as turf from "@turf/turf";
 import { useTheme } from "next-themes";
 import { AirportData } from "@/entities/airportDatabase/airportDatabase.codelataAirport";
@@ -45,8 +45,10 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       arrivalAirportData?.latitudeAirport,
     ]);
   }, [flightData, arrivalAirportData]);
-
   useEffect(() => {
+    mapboxgl.accessToken = process.env
+      .NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
+
     if (
       !flightData ||
       !arrivalAirportData ||
@@ -55,9 +57,6 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       !route.features[0]
     )
       return;
-
-    mapboxgl.accessToken = process.env
-      .NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -77,7 +76,6 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
 
     // Calculate the distance in kilometers between route start/end point.
     const lineDistance = turf.length(route.features[0]);
-    console.log({ origin, destination, lineDistance, l: route.features[0] });
 
     const arc = [] as any;
 
@@ -123,8 +121,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
               },
               type: "Feature",
               properties: {
-                description:
-                  '<strong>Truckeroo</strong><p><a href="http://www.truckeroodc.com/www/" target="_blank">Truckeroo</a> brings dozens of food trucks, live music, and games to half and M Street SE (across from Navy Yard Metro Station) today from 11:00 a.m. to 11:00 p.m.</p>',
+                description: "",
                 icon: "airport",
               },
             },
