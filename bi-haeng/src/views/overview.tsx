@@ -16,7 +16,7 @@ const OverView = () => {
           <Messages />
         </form>
       </div>
-      <div className="relative flex h-full min-h flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 gap-4">
+      <div className="relative flex h-full min-h flex-col rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
         <Map />
       </div>
     </>

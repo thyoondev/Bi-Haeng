@@ -2,23 +2,14 @@ import { Button } from "@/shared/ui/button";
 import { DarkModeToggle } from "@/shared/ui/darkModeToggle";
 import { TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { Tooltip } from "@radix-ui/react-tooltip";
-import {
-  Book,
-  Bot,
-  Code2,
-  LifeBuoy,
-  Settings2,
-  SquareTerminal,
-  SquareUser,
-  Triangle,
-} from "lucide-react";
+import { Map, Plane, SquareUser } from "lucide-react";
 
 const NavLayout = () => {
   return (
     <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
       <div className="border-b p-2">
         <Button variant="outline" size="icon" aria-label="Home">
-          <Triangle className="size-5 fill-foreground" />
+          <Plane className="size-5 fill-foreground" />
         </Button>
       </div>
       <nav className="grid gap-1 p-2">
@@ -28,73 +19,13 @@ const NavLayout = () => {
               variant="ghost"
               size="icon"
               className="rounded-lg bg-muted"
-              aria-label="Playground"
+              aria-label="Overview"
             >
-              <SquareTerminal className="size-5" />
+              <Map className="size-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
-            Playground
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Models"
-            >
-              <Bot className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Models
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="API"
-            >
-              <Code2 className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            API
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Documentation"
-            >
-              <Book className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Documentation
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Settings"
-            >
-              <Settings2 className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Settings
+            Overview
           </TooltipContent>
         </Tooltip>
       </nav>
@@ -105,21 +36,6 @@ const NavLayout = () => {
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             Theme
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mt-auto rounded-lg"
-              aria-label="Help"
-            >
-              <LifeBuoy className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Help
           </TooltipContent>
         </Tooltip>
         <Tooltip>

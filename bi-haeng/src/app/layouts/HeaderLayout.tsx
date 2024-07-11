@@ -22,7 +22,7 @@ import { Bird, Rabbit, Settings, Share, Turtle } from "lucide-react";
 const HeaderLayout = () => {
   return (
     <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
-      <h1 className="text-xl font-semibold">Playground</h1>
+      <h1 className="text-xl font-semibold">Bi:Haeng</h1>
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden">
