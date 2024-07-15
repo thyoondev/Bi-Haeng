@@ -20,7 +20,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 const OverView = () => {
-  const [snap, setSnap] = useState<number | string | null>("400px");
+  const [snap, setSnap] = useState<number | string | null>("300px");
   const [selectedFlight, setSelectedFlight] = useState<string>("");
   const [flightData, setFlightData] = useState<FlightData>();
   const [arrivalIataCode, setArrivalIataCode] = useState<string>("");
@@ -68,7 +68,7 @@ const OverView = () => {
       <Drawer
         open
         modal={false}
-        snapPoints={["300px", "400px", 1]}
+        snapPoints={["200px", "300px", 1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         dismissible={false}
