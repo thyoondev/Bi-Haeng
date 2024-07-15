@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/shared/ui/tooltip";
 import { ThemeProvider } from "./provider/theme-provider";
 import { ReactQueryProvider } from "./provider/react-query-provider";
 import MainLayout from "./layouts/MainLayout";
 
-const inter = Inter({ subsets: ["latin"] });
+const defaultFont = Roboto_Mono({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Bi:Haeng",
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={defaultFont.className}>
         <ReactQueryProvider>
           <ThemeProvider
             attribute="class"

@@ -48,7 +48,9 @@ const selectItems = [
 const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
   return (
     <div className="relative  flex-1 md:grow-0 ">
-      <Label htmlFor="Select a flight">Select a flight</Label>
+      <Label htmlFor="My Flight" className="font-semibold text-lg">
+        My Flight
+      </Label>
       <Select onValueChange={setSelectedFlight}>
         <SelectTrigger
           id="Select a flight"
