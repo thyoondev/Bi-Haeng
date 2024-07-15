@@ -72,12 +72,13 @@ const OverView = () => {
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         dismissible={false}
+        disablePreventScroll={true}
       >
         <DrawerPortal>
-          <DrawerContent className="fixed md:hidden bottom-0 left-0 right-0 h-full max-h-[97%] rounded-t-3xl border-none">
+          <DrawerContent className="fixed md:hidden bottom-0 left-0 right-0 h-full max-h-[97%] rounded-t-3xl border-none ">
             <div
               className={clsx(
-                "flex flex-col max-w-md mx-auto w-full p-4 pt-5",
+                "flex flex-col max-w-md mx-auto w-full p-4 pt-5 ",
                 {
                   "overflow-y-auto": snap === 1,
                   "overflow-hidden": snap !== 1,

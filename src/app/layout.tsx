@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/shared/ui/tooltip";
@@ -11,6 +11,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Bi:Haeng",
   description: "A flight tracking application",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  minimumScale: 1,
+  initialScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
