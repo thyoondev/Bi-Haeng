@@ -74,7 +74,7 @@ const OverView = () => {
         dismissible={false}
       >
         <DrawerPortal>
-          <DrawerContent className="fixed md:hidden bottom-0 left-0 right-0 h-full max-h-[97%] rounded-t-3xl">
+          <DrawerContent className="fixed md:hidden bottom-0 left-0 right-0 h-full max-h-[97%] rounded-t-3xl border-none">
             <div
               className={clsx(
                 "flex flex-col max-w-md mx-auto w-full p-4 pt-5",
@@ -97,7 +97,7 @@ const OverView = () => {
         </DrawerPortal>
       </Drawer>
 
-      <div className="relative flex h-[calc(100%-250px)] md:h-full min-h flex-col rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
+      <div className="relative flex h-[calc(100%-150px)] md:h-full min-h flex-col rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
         <Map flightData={flightData} arrivalAirportData={arrivalAirportData} />
       </div>
     </main>
