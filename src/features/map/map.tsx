@@ -7,6 +7,13 @@ import { FlightData } from "@/entities/flights/flights.flightRegNum";
 import * as turf from "@turf/turf";
 import { useTheme } from "next-themes";
 import { AirportData } from "@/entities/airportDatabase/airportDatabase.codelataAirport";
+import { useGeoLocation } from "@/shared/hooks/useGeoLocation";
+
+const geolocationOptions = {
+  enableHighAccuracy: true,
+  timeout: 1000 * 10,
+  maximumAge: 1000 * 3600 * 24,
+};
 
 interface MapProps {
   flightData?: FlightData;
@@ -16,6 +23,7 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
   const mapContainer = useRef<any>(null);
   const { theme } = useTheme();
+  const { location, error } = useGeoLocation(geolocationOptions);
   const map = useRef<mapboxgl.Map | any>(null);
 
   const [origin, setOrigin] = useState<[number, number]>();
@@ -55,8 +63,11 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
         theme === "dark"
           ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
           : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb",
-      center: [origin?.[0] || 126.927187, origin?.[1] || 37.526683],
-      zoom: 3,
+      center: [
+        origin?.[0] || location?.longitude || 126.927187,
+        origin?.[1] || location?.latitude || 37.526683,
+      ],
+      zoom: 4,
     });
 
     // remove mapbox logo

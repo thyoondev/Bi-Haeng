@@ -56,7 +56,7 @@ const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
         >
           <SelectValue placeholder="Select a flight" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent side="bottom">
           {selectItems.map((item) => (
             <SelectItemContent
               key={item.value}

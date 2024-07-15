@@ -18,19 +18,19 @@ export interface AirportData {
 }
 
 interface GetAirportDatabaseParams {
-  codeIataAirport?: string;
+  codeIataAirport: string;
 }
 
 export const GetAirportDatabase = ({
   codeIataAirport,
 }: GetAirportDatabaseParams) => {
-  const { data, isLoading, refetch } = useQuery<AirportData | undefined, Error>(
-    {
-      queryKey: ["getAirportDatabase"],
-      queryFn: async () => {
-        if (!codeIataAirport) {
-          return undefined;
-        }
+  const { data, isLoading, refetch } = useQuery<AirportData, Error>({
+    queryKey: ["getAirportDatabase"],
+    queryFn: async () => {
+      if (!codeIataAirport) {
+        throw new Error("codeIataAirport is required");
+      }
+      try {
         const url = `/api/airportDatabase?codeIataAirport=${codeIataAirport}`;
         const response = await axios(url);
         if (response.status !== 200) {
@@ -38,9 +38,12 @@ export const GetAirportDatabase = ({
         }
 
         return response.data as AirportData;
-      },
-    }
-  );
+      } catch (error) {
+        console.error(error);
+        throw new Error("Network response was not ok");
+      }
+    },
+  });
 
   return { data, isLoading, refetch };
 };

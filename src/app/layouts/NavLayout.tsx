@@ -6,7 +6,7 @@ import { Map, Plane } from "lucide-react";
 
 const NavLayout = () => {
   return (
-    <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
+    <aside className="inset-y fixed  left-0 z-20 md:flex h-full flex-col border-r hidden">
       <div className="border-b p-2">
         <Button variant="outline" size="icon" aria-label="Home">
           <Plane className="size-5 fill-foreground" />
