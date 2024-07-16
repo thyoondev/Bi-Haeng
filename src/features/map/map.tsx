@@ -4,9 +4,10 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FlightData } from "@/entities/flights/flights.flightRegNum";
 import * as turf from "@turf/turf";
-import { useTheme } from "next-themes";
 import { AirportData } from "@/entities/airportDatabase/airportDatabase.codelataAirport";
 import { useGeoLocation } from "@/shared/hooks/useGeoLocation";
+import { useRecoilValue } from "recoil";
+import { mapTypeState } from "@/shared/store/map";
 
 const geolocationOptions = {
   enableHighAccuracy: true,
@@ -21,13 +22,12 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const { theme } = useTheme();
+  const mapType = useRecoilValue(mapTypeState);
   const { location } = useGeoLocation(geolocationOptions);
   const map = useRef<mapboxgl.Map | null>(null);
 
   const [origin, setOrigin] = useState<[number, number] | null>(null);
   const [destination, setDestination] = useState<[number, number] | null>(null);
-  const [zoomLevel, setZoomLevel] = useState<number>(4);
 
   const route = useMemo(() => {
     if (!origin || !destination) return null;
@@ -65,10 +65,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     if (mapContainer.current) {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style:
-          theme === "dark"
-            ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
-            : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb",
+        style: "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr",
         center: [
           origin?.[0] || location?.longitude || 126.927187,
           origin?.[1] || location?.latitude || 37.526683,
@@ -99,7 +96,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     map.current.flyTo({ center: origin, zoom: 7, essential: true });
 
     const lineDistance = turf.length(route.features[0]);
-    const steps = 500;
+    const steps = 300;
 
     const arc = [];
     for (let i = 0; i < steps; i++) {
@@ -154,6 +151,14 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       },
     });
   }, [route, origin, destination, flightData]);
+
+  useEffect(() => {
+    map.current?.setStyle(
+      mapType === "monochrome"
+        ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
+        : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb"
+    );
+  }, [mapType]);
 
   return <div className="flex-1 md:rounded-lg" ref={mapContainer} id="map" />;
 };

@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/shared/ui/tooltip";
 import { ThemeProvider } from "./provider/theme-provider";
 import { ReactQueryProvider } from "./provider/react-query-provider";
 import MainLayout from "./layouts/MainLayout";
+import { RecoilProvider } from "./provider/recoil-provider";
 
 const defaultFont = Roboto_Mono({ weight: "400", subsets: ["latin"] });
 
@@ -29,16 +30,18 @@ export default function RootLayout({
     <html lang="en">
       <body className={defaultFont.className}>
         <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <MainLayout>{children}</MainLayout>
-            </TooltipProvider>
-          </ThemeProvider>
+          <RecoilProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>
+                <MainLayout>{children}</MainLayout>
+              </TooltipProvider>
+            </ThemeProvider>
+          </RecoilProvider>
         </ReactQueryProvider>
       </body>
     </html>
