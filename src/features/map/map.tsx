@@ -109,58 +109,50 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
 
     route.features[0].geometry.coordinates = arc?.slice(1, arc.length);
 
-    const onLoad = () => {
-      if (map.current?.getLayer("route")) {
-        map.current?.removeLayer("route");
-        map.current?.removeSource("route");
-      }
-
-      if (!map.current?.getSource("route")) {
-        map.current?.addSource("route", { type: "geojson", data: route });
-        map.current?.addLayer({
-          id: "route",
-          source: "route",
-          type: "line",
-          paint: { "line-width": 2, "line-color": "#EA580C" },
-        });
-      }
-
-      if (map.current?.getLayer("planes")) {
-        map.current?.removeLayer("planes");
-        map.current?.removeSource("planes");
-      }
-      map.current?.addSource("planes", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              geometry: { type: "Point", coordinates: origin },
-              properties: { icon: "airport" },
-            },
-          ],
-        },
-      });
-
-      map.current?.addLayer({
-        id: "planes",
-        type: "symbol",
-        source: "planes",
-        layout: {
-          "icon-image": ["get", "icon"],
-          "icon-allow-overlap": true,
-          "icon-size": 1.5,
-          "icon-rotate": flightData?.geography.direction || 0,
-        },
-      });
-    };
-
-    if (map.current?.loaded()) {
-      onLoad();
-    } else {
-      map.current?.on("load", onLoad);
+    if (map.current?.getLayer("route")) {
+      map.current?.removeLayer("route");
+      map.current?.removeSource("route");
     }
+
+    if (!map.current?.getSource("route")) {
+      map.current?.addSource("route", { type: "geojson", data: route });
+      map.current?.addLayer({
+        id: "route",
+        source: "route",
+        type: "line",
+        paint: { "line-width": 2, "line-color": "#EA580C" },
+      });
+    }
+
+    if (map.current?.getLayer("planes")) {
+      map.current?.removeLayer("planes");
+      map.current?.removeSource("planes");
+    }
+    map.current?.addSource("planes", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: { type: "Point", coordinates: origin },
+            properties: { icon: "airport" },
+          },
+        ],
+      },
+    });
+
+    map.current?.addLayer({
+      id: "planes",
+      type: "symbol",
+      source: "planes",
+      layout: {
+        "icon-image": ["get", "icon"],
+        "icon-allow-overlap": true,
+        "icon-size": 1.5,
+        "icon-rotate": flightData?.geography.direction || 0,
+      },
+    });
   }, [route, origin, destination, flightData]);
 
   return <div className="flex-1 rounded-lg" ref={mapContainer} id="map" />;
