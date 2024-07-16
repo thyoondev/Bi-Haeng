@@ -68,7 +68,7 @@ const OverView = () => {
       <Drawer
         open
         modal={false}
-        snapPoints={["200px", "300px", 1]}
+        snapPoints={["160px", "300px", 1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         dismissible={false}
