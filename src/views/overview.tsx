@@ -64,11 +64,10 @@ const OverView = () => {
         </form>
       </div>
       {/* Mobile */}
-
       <Drawer
         open
         modal={false}
-        snapPoints={["160px", "300px", 1]}
+        snapPoints={["160px", "300px", 0.95]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         dismissible={false}
@@ -80,8 +79,8 @@ const OverView = () => {
               className={clsx(
                 "flex flex-col max-w-md mx-auto w-full p-4 pt-5 ",
                 {
-                  "overflow-y-auto": snap === 1,
-                  "overflow-hidden": snap !== 1,
+                  "overflow-y-auto": snap === 0.95,
+                  "overflow-hidden": snap !== 0.95,
                 }
               )}
             >
@@ -98,7 +97,7 @@ const OverView = () => {
         </DrawerPortal>
       </Drawer>
 
-      <div className="relative flex h-[calc(100%-150px)] md:h-full min-h flex-col rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
+      <div className="relative flex h-[calc(100%-100px)] md:h-full min-h flex-col md:rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
         <Map flightData={flightData} arrivalAirportData={arrivalAirportData} />
       </div>
     </main>

@@ -155,7 +155,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     });
   }, [route, origin, destination, flightData]);
 
-  return <div className="flex-1 rounded-lg" ref={mapContainer} id="map" />;
+  return <div className="flex-1 md:rounded-lg" ref={mapContainer} id="map" />;
 };
 
 export default Map;
