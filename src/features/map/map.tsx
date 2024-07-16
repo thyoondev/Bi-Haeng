@@ -91,7 +91,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
         map.current.remove();
       }
     };
-  }, [theme, origin, location]);
+  }, [location]);
 
   useEffect(() => {
     if (!map.current || !route || !origin || !destination) return;
@@ -99,16 +99,22 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     map.current.flyTo({ center: origin, zoom: 7, essential: true });
 
     const lineDistance = turf.length(route.features[0]);
-    const arc = new Array(Math.ceil(lineDistance * 100))
-      .fill(null)
-      .map((_, i) => {
-        const segment = turf.along(route.features[0], (i * lineDistance) / 100);
-        return segment.geometry.coordinates;
-      });
+    const steps = 500;
 
-    route.features[0].geometry.coordinates = arc.slice(1, arc.length);
+    const arc = [];
+    for (let i = 0; i < steps; i++) {
+      const segment = turf.along(route.features[0], (i * lineDistance) / steps);
+      arc.push(segment.geometry.coordinates);
+    }
+
+    route.features[0].geometry.coordinates = arc?.slice(1, arc.length);
 
     const onLoad = () => {
+      if (map.current?.getLayer("route")) {
+        map.current?.removeLayer("route");
+        map.current?.removeSource("route");
+      }
+
       if (!map.current?.getSource("route")) {
         map.current?.addSource("route", { type: "geojson", data: route });
         map.current?.addLayer({
@@ -119,33 +125,35 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
         });
       }
 
-      if (!map.current?.getSource("planes")) {
-        map.current?.addSource("planes", {
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                geometry: { type: "Point", coordinates: origin },
-                properties: { icon: "airport" },
-              },
-            ],
-          },
-        });
-
-        map.current?.addLayer({
-          id: "planes",
-          type: "symbol",
-          source: "planes",
-          layout: {
-            "icon-image": ["get", "icon"],
-            "icon-allow-overlap": true,
-            "icon-size": 1.5,
-            "icon-rotate": flightData?.geography.direction || 0,
-          },
-        });
+      if (map.current?.getLayer("planes")) {
+        map.current?.removeLayer("planes");
+        map.current?.removeSource("planes");
       }
+      map.current?.addSource("planes", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: { type: "Point", coordinates: origin },
+              properties: { icon: "airport" },
+            },
+          ],
+        },
+      });
+
+      map.current?.addLayer({
+        id: "planes",
+        type: "symbol",
+        source: "planes",
+        layout: {
+          "icon-image": ["get", "icon"],
+          "icon-allow-overlap": true,
+          "icon-size": 1.5,
+          "icon-rotate": flightData?.geography.direction || 0,
+        },
+      });
     };
 
     if (map.current?.loaded()) {
