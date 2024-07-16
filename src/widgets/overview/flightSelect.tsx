@@ -23,7 +23,7 @@ const selectItems = [
     value: "HL8517",
     icon: <Plane />,
     title: "HL8517",
-    description: "B787-9 (server)",
+    description: "B787-9",
   },
   {
     value: "HL8388",

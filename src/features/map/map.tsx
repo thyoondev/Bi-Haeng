@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-
+import { useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FlightData } from "@/entities/flights/flights.flightRegNum";
@@ -11,8 +10,8 @@ import { useGeoLocation } from "@/shared/hooks/useGeoLocation";
 
 const geolocationOptions = {
   enableHighAccuracy: true,
-  timeout: 1000 * 10,
-  maximumAge: 1000 * 3600 * 24,
+  timeout: 10000,
+  maximumAge: 86400000,
 };
 
 interface MapProps {
@@ -21,140 +20,140 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
-  const mapContainer = useRef<any>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  const { location, error } = useGeoLocation(geolocationOptions);
-  const map = useRef<mapboxgl.Map | any>(null);
+  const { location } = useGeoLocation(geolocationOptions);
+  const map = useRef<mapboxgl.Map | null>(null);
 
-  const [origin, setOrigin] = useState<[number, number]>();
-  const [destination, setDestination] = useState<[number, number]>();
-  const route = {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature" as any,
-        properties: null,
-        geometry: {
-          type: "LineString" as any,
-          coordinates: [destination, origin] as any,
+  const [origin, setOrigin] = useState<[number, number] | null>(null);
+  const [destination, setDestination] = useState<[number, number] | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number>(4);
+
+  const route = useMemo(() => {
+    if (!origin || !destination) return null;
+    return {
+      type: "FeatureCollection" as any,
+      features: [
+        {
+          type: "Feature" as any,
+          properties: {},
+          geometry: {
+            type: "LineString" as any,
+            coordinates: [origin, destination] as any,
+          },
         },
-      },
-    ],
-  };
-
-  useEffect(() => {
-    if (!flightData || !arrivalAirportData) return;
-    setOrigin([
-      flightData?.geography?.longitude,
-      flightData?.geography?.latitude,
-    ]);
-    setDestination([
-      arrivalAirportData?.longitudeAirport,
-      arrivalAirportData?.latitudeAirport,
-    ]);
-  }, [flightData, arrivalAirportData]);
-  useEffect(() => {
-    mapboxgl.accessToken = process.env
-      .NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style:
-        theme === "dark"
-          ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
-          : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb",
-      center: [
-        origin?.[0] || location?.longitude || 126.927187,
-        origin?.[1] || location?.latitude || 37.526683,
       ],
-      zoom: 4,
-    });
+    };
+  }, [origin, destination]);
 
-    // remove mapbox logo
-    mapContainer.current.querySelector(".mapboxgl-ctrl-logo").remove();
-    mapContainer.current.querySelector(".mapboxgl-ctrl-attrib").remove();
+  useEffect(() => {
+    if (flightData && arrivalAirportData) {
+      setOrigin([
+        flightData.geography.longitude,
+        flightData.geography.latitude,
+      ]);
+      setDestination([
+        arrivalAirportData.longitudeAirport,
+        arrivalAirportData.latitudeAirport,
+      ]);
+    }
+  }, [flightData, arrivalAirportData]);
 
-    if (
-      !flightData ||
-      !arrivalAirportData ||
-      !origin?.length ||
-      !destination?.length ||
-      !route.features[0]
-    )
-      return;
+  useEffect(() => {
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
-    //경로 그리기 참고 https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/
+    if (mapContainer.current) {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style:
+          theme === "dark"
+            ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
+            : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb",
+        center: [
+          origin?.[0] || location?.longitude || 126.927187,
+          origin?.[1] || location?.latitude || 37.526683,
+        ],
+        zoom: 4,
+      });
 
-    // Calculate the distance in kilometers between route start/end point.
-    const lineDistance = turf.length(route.features[0]);
-
-    const arc = [] as any;
-
-    // Number of steps to use in the arc and animation, more steps means
-    // a smoother arc and animation, but too many steps will result in a
-    // low frame rate
-    const steps = 100;
-
-    // Draw an arc between the `origin` & `destination` of the two points
-    for (let i = 0; i < lineDistance; i += lineDistance / steps) {
-      const segment = turf.along(route.features[0], i);
-      arc.push(segment.geometry.coordinates);
+      map.current.on("load", () => {
+        const logo = mapContainer.current?.querySelector(".mapboxgl-ctrl-logo");
+        const attribution = mapContainer.current?.querySelector(
+          ".mapboxgl-ctrl-attrib"
+        );
+        logo?.remove();
+        attribution?.remove();
+      });
     }
 
-    // Update the route with calculated arc coordinates
-    route.features[0].geometry.coordinates = arc;
+    return () => {
+      if (map.current) {
+        map.current.remove();
+      }
+    };
+  }, [theme, origin, location]);
 
-    map.current.on("load", () => {
-      map.current.addSource("route", {
-        type: "geojson",
-        data: route,
+  useEffect(() => {
+    if (!map.current || !route || !origin || !destination) return;
+
+    map.current.flyTo({ center: origin, zoom: 7, essential: true });
+
+    const lineDistance = turf.length(route.features[0]);
+    const arc = new Array(Math.ceil(lineDistance * 100))
+      .fill(null)
+      .map((_, i) => {
+        const segment = turf.along(route.features[0], (i * lineDistance) / 100);
+        return segment.geometry.coordinates;
       });
 
-      map.current.addLayer({
-        id: "route",
-        source: "route",
-        type: "line",
-        paint: {
-          "line-width": 2,
-          "line-color": "#EA580C",
-        },
-      });
+    route.features[0].geometry.coordinates = arc.slice(1, arc.length);
 
-      map.current.addSource("planes", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: [
-            {
-              geometry: {
-                type: "Point",
-                coordinates: [origin[0], origin[1]],
+    const onLoad = () => {
+      if (!map.current?.getSource("route")) {
+        map.current?.addSource("route", { type: "geojson", data: route });
+        map.current?.addLayer({
+          id: "route",
+          source: "route",
+          type: "line",
+          paint: { "line-width": 2, "line-color": "#EA580C" },
+        });
+      }
+
+      if (!map.current?.getSource("planes")) {
+        map.current?.addSource("planes", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: { type: "Point", coordinates: origin },
+                properties: { icon: "airport" },
               },
-              type: "Feature",
-              properties: {
-                description: "",
-                icon: "airport",
-              },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      map.current.addLayer({
-        id: "planes",
-        type: "symbol",
-        source: "planes",
-        layout: {
-          "icon-image": ["get", "icon"],
-          "icon-allow-overlap": true,
-          "icon-size": 1.5,
-          "icon-rotate": flightData.geography.direction || 0,
-        },
-      });
-    });
+        map.current?.addLayer({
+          id: "planes",
+          type: "symbol",
+          source: "planes",
+          layout: {
+            "icon-image": ["get", "icon"],
+            "icon-allow-overlap": true,
+            "icon-size": 1.5,
+            "icon-rotate": flightData?.geography.direction || 0,
+          },
+        });
+      }
+    };
 
-    return () => map.current.remove();
-  }, [arrivalAirportData, flightData, theme, origin, destination]);
+    if (map.current?.loaded()) {
+      onLoad();
+    } else {
+      map.current?.on("load", onLoad);
+    }
+  }, [route, origin, destination, flightData]);
 
   return <div className="flex-1 rounded-lg" ref={mapContainer} id="map" />;
 };
