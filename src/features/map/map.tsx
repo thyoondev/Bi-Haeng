@@ -102,6 +102,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
         : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb"
     );
     map.current?.on("style.load", () => {
+      console.log("style loaded");
       updateRoute();
     });
   }, [mapType]);
@@ -114,8 +115,8 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
     setPreviousFlightData(flightData as any);
     const isDifferent =
       !previousFlightData ||
-      JSON.stringify((previousFlightData as any)?.aircraft.regNumber) !==
-        JSON.stringify((flightData as any)?.aircraft.regNumber);
+      (previousFlightData as any)?.aircraft.regNumber !==
+        (flightData as any)?.aircraft.regNumber;
 
     if (isDifferent) {
       const lineDistance = turf.length(route.features[0]);
@@ -133,9 +134,16 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       route.features[0].geometry.coordinates = arc;
     }
 
-    if (map.current?.getLayer("route")) {
-      map.current?.removeLayer("route");
-      map.current?.removeSource("route");
+    try {
+      if (map.current?.getLayer("route")) {
+        map.current.removeLayer("route");
+        map.current.removeSource("route");
+      }
+    } catch (error) {
+      console.error(
+        "Error occurred while removing the route layer and source:",
+        error
+      );
     }
 
     if (!map.current?.getSource("route")) {
@@ -148,10 +156,18 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       });
     }
 
-    if (map.current?.getLayer("planes")) {
-      map.current?.removeLayer("planes");
-      map.current?.removeSource("planes");
+    try {
+      if (map.current?.getLayer("planes")) {
+        map.current?.removeLayer("planes");
+        map.current?.removeSource("planes");
+      }
+    } catch (error) {
+      console.error(
+        "Error occurred while removing the planes layer and source:",
+        error
+      );
     }
+
     map.current?.addSource("planes", {
       type: "geojson",
       data: {
