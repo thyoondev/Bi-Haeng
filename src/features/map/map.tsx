@@ -91,6 +91,21 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
   }, [location]);
 
   useEffect(() => {
+    updateRoute();
+  }, [route, origin, destination, flightData]);
+
+  useEffect(() => {
+    map.current?.setStyle(
+      mapType === "monochrome"
+        ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
+        : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb"
+    );
+    map.current?.on("style.load", () => {
+      updateRoute();
+    });
+  }, [mapType]);
+
+  const updateRoute = () => {
     if (!map.current || !route || !origin || !destination) return;
 
     map.current.flyTo({ center: origin, zoom: 7, essential: true });
@@ -104,7 +119,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       arc.push(segment.geometry.coordinates);
     }
 
-    route.features[0].geometry.coordinates = arc?.slice(1, arc.length);
+    route.features[0].geometry.coordinates = arc;
 
     if (map.current?.getLayer("route")) {
       map.current?.removeLayer("route");
@@ -150,15 +165,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
         "icon-rotate": flightData?.geography.direction || 0,
       },
     });
-  }, [route, origin, destination, flightData]);
-
-  useEffect(() => {
-    map.current?.setStyle(
-      mapType === "monochrome"
-        ? "mapbox://styles/0xjaden/clxy5fbxa001y01pr172g8iqr"
-        : "mapbox://styles/0xjaden/clyhdq7fh010u01r4fvxk3apb"
-    );
-  }, [mapType]);
+  };
 
   return <div className="flex-1 md:rounded-lg" ref={mapContainer} id="map" />;
 };
