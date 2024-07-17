@@ -16,7 +16,7 @@ import {
 } from "@/shared/ui/drawer";
 import FlightInfo from "@/widgets/overview/flightInfo";
 import FlightSelect from "@/widgets/overview/flightSelect";
-import MobileControlPannel from "@/widgets/overview/mobileControlPannel";
+import MapControlPannel from "@/widgets/overview/mapControlPannel";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
@@ -102,9 +102,9 @@ const OverView = () => {
 
       <div className="relative flex h-[calc(100%-100px)] md:h-full min-h flex-col md:rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
         <Map flightData={flightData} arrivalAirportData={arrivalAirportData} />
-      </div>
-      <div className="absolute right-4 top-4 flex flex-col justify-center items-center md:hidden">
-        <MobileControlPannel />
+        <div className="absolute right-4 md:right-8 top-4 md:top-8 flex flex-col justify-center items-center">
+          <MapControlPannel />
+        </div>
       </div>
     </main>
   );
