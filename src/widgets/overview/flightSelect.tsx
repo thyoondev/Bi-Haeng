@@ -52,30 +52,34 @@ const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    flightList.forEach((flight) => {
-      queryClient.prefetchQuery({
-        queryKey: ["getFlightData", flight.value],
-        queryFn: async () => {
+    const fetchAndPrefetchAllFlightData = async () => {
+      const updatedFlights = await Promise.all(
+        flightList.map(async (flight) => {
           try {
-            const data = await fetchFlightData({ regNum: flight.value });
-            return data;
+            await queryClient.prefetchQuery({
+              queryKey: ["getFlightData" + flight.value],
+              queryFn: () => fetchFlightData({ regNum: flight.value }),
+            });
+
+            const data = queryClient.getQueryData([
+              "getFlightData" + flight.value,
+            ]);
+
+            if (data) {
+              return flight;
+            } else {
+              throw new Error("Data not found in cache");
+            }
           } catch (error) {
-            console.error(
-              `Error fetching flight data for ${flight.value}:`,
-              error
-            );
-            setFlightList((prevItems) =>
-              prevItems.map((prevItem) =>
-                prevItem.value === flight.value
-                  ? { ...prevItem, title: `${prevItem.title} (offline)` }
-                  : prevItem
-              )
-            );
-            throw error; // Rethrow the error to ensure prefetchQuery handles it as an error
+            return { ...flight, title: `${flight.title} (offline)` };
           }
-        },
-      });
-    });
+        })
+      );
+
+      setFlightList(updatedFlights);
+    };
+
+    fetchAndPrefetchAllFlightData();
   }, [queryClient]);
 
   return (
