@@ -28,6 +28,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
 
   const [origin, setOrigin] = useState<[number, number] | null>(null);
   const [destination, setDestination] = useState<[number, number] | null>(null);
+  const [previousFlightData, setPreviousFlightData] = useState(null);
 
   const route = useMemo(() => {
     if (!origin || !destination) return null;
@@ -110,16 +111,28 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
 
     map.current.flyTo({ center: origin, zoom: 7, essential: true });
 
-    const lineDistance = turf.length(route.features[0]);
-    const steps = 300;
+    setPreviousFlightData(flightData as any);
+    const isDifferent =
+      !previousFlightData ||
+      JSON.stringify((previousFlightData as any)?.aircraft.regNumber) !==
+        JSON.stringify((flightData as any)?.aircraft.regNumber);
 
-    const arc = [];
-    for (let i = 0; i < steps; i++) {
-      const segment = turf.along(route.features[0], (i * lineDistance) / steps);
-      arc.push(segment.geometry.coordinates);
+    if (isDifferent) {
+      const lineDistance = turf.length(route.features[0]);
+      const steps = 300;
+
+      const arc = [];
+      for (let i = 0; i < steps; i++) {
+        const segment = turf.along(
+          route.features[0],
+          (i * lineDistance) / steps
+        );
+        arc.push(segment.geometry.coordinates);
+      }
+      arc.shift();
+      route.features[0].geometry.coordinates = arc;
+      console.log(arc);
     }
-
-    route.features[0].geometry.coordinates = arc;
 
     if (map.current?.getLayer("route")) {
       map.current?.removeLayer("route");
