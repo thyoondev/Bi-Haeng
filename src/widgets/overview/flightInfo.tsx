@@ -22,7 +22,7 @@ const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
     data || {};
 
   return (
-    <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
+    <Card className="overflow-hidden touch-none">
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
@@ -51,7 +51,7 @@ const FlightInfo = ({ data }: { data: FlightData | undefined }) => {
           </Button> */}
         </div>
       </CardHeader>
-      <CardContent className="p-6 text-sm">
+      <CardContent className="p-6 text-sm overflow-auto">
         <AircraftDetails aircraft={aircraft} />
         <Separator className="my-4" />
         <div className="grid grid-cols-2 gap-4">

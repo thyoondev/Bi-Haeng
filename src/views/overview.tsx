@@ -56,7 +56,7 @@ const OverView = () => {
   }, [__flightDataRefetch, selectedFlight]);
 
   return (
-    <main className="md:grid md:grid-rows-1 lg:grid-rows-1 flex-1 gap-4 overflow-auto md:p-4 md:grid-cols-2 lg:grid-cols-3 relative">
+    <main className="md:grid md:grid-rows-1 lg:grid-rows-1 flex-1 gap-4 overflow-auto md:p-4 md:grid-cols-2 lg:grid-cols-3 relative ">
       {/* PC */}
       <div className="hidden md:relative flex-col items-start gap-8 md:flex">
         <form className="grid w-full items-start gap-6">
@@ -66,7 +66,6 @@ const OverView = () => {
       </div>
 
       {/* Mobile */}
-
       <Drawer
         open
         modal={false}
@@ -74,7 +73,6 @@ const OverView = () => {
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         dismissible={false}
-        disablePreventScroll={true}
       >
         <DrawerPortal>
           <DrawerContent className="fixed md:hidden bottom-0 left-0 right-0 h-full max-h-[97%] rounded-t-3xl border-none outline-none  ">
@@ -100,9 +98,9 @@ const OverView = () => {
         </DrawerPortal>
       </Drawer>
 
-      <div className="relative flex h-[calc(100%-100px)] md:h-full min-h flex-col md:rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4">
+      <div className="relative flex h-[calc(100%-100px)] md:h-full min-h flex-col md:rounded-xl bg-muted/50 lg:p-4 lg:col-span-2 gap-4 overflow-hidden ">
         <Map flightData={flightData} arrivalAirportData={arrivalAirportData} />
-        <div className="absolute right-4 md:right-8 top-4 md:top-8 flex flex-col justify-center items-center">
+        <div className="fixed md:absolute right-4 md:right-8 top-4 md:top-8 flex flex-col justify-center items-center">
           <MapControlPannel />
         </div>
       </div>

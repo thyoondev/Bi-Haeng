@@ -71,7 +71,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
           origin?.[0] || location?.longitude || 126.927187,
           origin?.[1] || location?.latitude || 37.526683,
         ],
-        zoom: 4,
+        zoom: 5,
       });
 
       map.current.on("load", () => {
@@ -109,7 +109,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
   const updateRoute = () => {
     if (!map.current || !route || !origin || !destination) return;
 
-    map.current.flyTo({ center: origin, zoom: 7, essential: true });
+    map.current.flyTo({ center: origin, zoom: 4, essential: true });
 
     setPreviousFlightData(flightData as any);
     const isDifferent =
