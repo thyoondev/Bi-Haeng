@@ -14,7 +14,7 @@ const SelectItemContent: React.FC<SelectItemContentProps> = ({
   title,
   description,
 }) => (
-  <SelectItem value={value}>
+  <SelectItem value={value} disabled={title.includes("offline")}>
     <div className="flex items-start gap-3 text-muted-foreground">
       <div className="size-5">{icon}</div>
       <div className="grid gap-0.5">

@@ -9,53 +9,71 @@ import {
 } from "@/shared/ui/select";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plane } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface FlightSelectProps {
   setSelectedFlight?: (value: string) => void;
 }
 
-const selectItems = [
-  {
-    value: "HL8387",
-    icon: <Plane />,
-    title: "HL8387",
-    description: "B787-9",
-  },
-  {
-    value: "HL8517",
-    icon: <Plane />,
-    title: "HL8517",
-    description: "B787-9",
-  },
-  {
-    value: "HL8388",
-    icon: <Plane />,
-    title: "HL8388",
-    description: "B787-9",
-  },
-  {
-    value: "HL8516",
-    icon: <Plane />,
-    title: "HL8516",
-    description: "B787-9",
-  },
-  {
-    value: "HL8389",
-    icon: <Plane />,
-    title: "HL8389",
-    description: "B787-9",
-  },
-];
-
 const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
+  const [flightList, setFlightList] = useState([
+    {
+      value: "HL8387",
+      icon: <Plane />,
+      title: "HL8387",
+      description: "B787-9",
+    },
+    {
+      value: "HL8517",
+      icon: <Plane />,
+      title: "HL8517",
+      description: "B787-9",
+    },
+    {
+      value: "HL8388",
+      icon: <Plane />,
+      title: "HL8388",
+      description: "B787-9",
+    },
+    {
+      value: "HL8516",
+      icon: <Plane />,
+      title: "HL8516",
+      description: "B787-9",
+    },
+    {
+      value: "HL8389",
+      icon: <Plane />,
+      title: "HL8389",
+      description: "B787-9",
+    },
+  ]);
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    selectItems.map((item) => {
+    flightList.forEach((flight) => {
       queryClient.prefetchQuery({
-        queryKey: ["getFlightData" + item.value],
-        queryFn: () => fetchFlightData({ regNum: item.value }),
+        queryKey: ["getFlightData", flight.value],
+        queryFn: async () => {
+          try {
+            const data = await fetchFlightData({ regNum: flight.value });
+            return data;
+          } catch (error) {
+            console.error(
+              `Error fetching flight data for ${flight.value}:`,
+              error
+            );
+            setFlightList((prevItems) =>
+              prevItems.map((prevItem) =>
+                prevItem.value === flight.value
+                  ? { ...prevItem, title: `${prevItem.title} (offline)` }
+                  : prevItem
+              )
+            );
+            throw error; // Rethrow the error to ensure prefetchQuery handles it as an error
+          }
+        },
       });
     });
   }, [queryClient]);
@@ -73,13 +91,13 @@ const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
           <SelectValue placeholder="Select a flight" />
         </SelectTrigger>
         <SelectContent side="bottom">
-          {selectItems.map((item) => (
+          {flightList.map((flight) => (
             <SelectItemContent
-              key={item.value}
-              value={item.value}
-              icon={item.icon}
-              title={item.title}
-              description={item.description}
+              key={flight.value}
+              value={flight.value}
+              icon={flight.icon}
+              title={flight.title}
+              description={flight.description}
             />
           ))}
         </SelectContent>

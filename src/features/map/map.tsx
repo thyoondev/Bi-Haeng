@@ -131,7 +131,6 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
       }
       arc.shift();
       route.features[0].geometry.coordinates = arc;
-      console.log(arc);
     }
 
     if (map.current?.getLayer("route")) {
