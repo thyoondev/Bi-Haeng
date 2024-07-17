@@ -1,9 +1,9 @@
 "use client";
 
-import { GetAirportDatabase } from "@/entities/airportDatabase/airportDatabase.codelataAirport";
+import { useAirportDatabase } from "@/entities/airportDatabase/airportDatabase.codelataAirport";
 import {
   FlightData,
-  GetFlightData,
+  useFlightData,
 } from "@/entities/flights/flights.flightRegNum";
 import Map from "@/features/map/map";
 import {
@@ -26,11 +26,11 @@ const OverView = () => {
   const [flightData, setFlightData] = useState<FlightData>();
   const [arrivalIataCode, setArrivalIataCode] = useState<string>("");
 
-  const { data: _flightData, refetch: __flightDataRefetch } = GetFlightData({
+  const { data: _flightData, refetch: __flightDataRefetch } = useFlightData({
     regNum: selectedFlight,
   });
   const { data: arrivalAirportData, refetch: arrivalAirportDataRefetch } =
-    GetAirportDatabase({
+    useAirportDatabase({
       codeIataAirport: arrivalIataCode,
     });
 

@@ -58,26 +58,29 @@ interface FlightDataProps {
   regNum: string;
 }
 
-export const GetFlightData = ({ regNum }: FlightDataProps) => {
-  const { data, isLoading, refetch } = useQuery<FlightData, Error>({
-    queryKey: ["getFlightData"],
-    queryFn: async () => {
-      if (!regNum) {
-        throw new Error("No registration number provided");
-      }
-      try {
-        const url = `/api/flights?regNum=${regNum}`;
-        const response = await axios(url);
-        if (response.status !== 200) {
-          throw new Error("Network response was not ok");
-        }
+export const fetchFlightData = async ({
+  regNum,
+}: FlightDataProps): Promise<FlightData> => {
+  if (!regNum) {
+    throw new Error("No registration number provided");
+  }
+  try {
+    const url = `/api/flights?regNum=${regNum}`;
+    const response = await axios(url);
+    if (response.status !== 200) {
+      throw new Error("Network response was not ok");
+    }
+    return response.data as FlightData;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Network response was not ok");
+  }
+};
 
-        return response.data as FlightData;
-      } catch (error) {
-        console.error(error);
-        throw new Error("Network response was not ok");
-      }
-    },
+export const useFlightData = ({ regNum }: FlightDataProps) => {
+  const { data, isLoading, refetch } = useQuery<FlightData, Error>({
+    queryKey: ["getFlightData" + regNum],
+    queryFn: () => fetchFlightData({ regNum }),
   });
 
   return { data, isLoading, refetch };

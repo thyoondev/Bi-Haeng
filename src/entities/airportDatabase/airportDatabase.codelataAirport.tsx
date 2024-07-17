@@ -21,7 +21,7 @@ interface GetAirportDatabaseParams {
   codeIataAirport: string;
 }
 
-export const GetAirportDatabase = ({
+export const useAirportDatabase = ({
   codeIataAirport,
 }: GetAirportDatabaseParams) => {
   const { data, isLoading, refetch } = useQuery<AirportData, Error>({

@@ -1,3 +1,4 @@
+import { fetchFlightData } from "@/entities/flights/flights.flightRegNum";
 import SelectItemContent from "@/features/overview/flightSelect.SelectItemContent";
 import { Label } from "@/shared/ui/label";
 import {
@@ -6,7 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/select";
+import { useQueryClient } from "@tanstack/react-query";
 import { Plane } from "lucide-react";
+import { useEffect } from "react";
 
 interface FlightSelectProps {
   setSelectedFlight?: (value: string) => void;
@@ -46,6 +49,17 @@ const selectItems = [
 ];
 
 const FlightSelect = ({ setSelectedFlight }: FlightSelectProps) => {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    selectItems.map((item) => {
+      queryClient.prefetchQuery({
+        queryKey: ["getFlightData" + item.value],
+        queryFn: () => fetchFlightData({ regNum: item.value }),
+      });
+    });
+  }, [queryClient]);
+
   return (
     <div className="relative  flex-1 md:grow-0 ">
       <Label htmlFor="My Flight" className="font-semibold text-lg">
