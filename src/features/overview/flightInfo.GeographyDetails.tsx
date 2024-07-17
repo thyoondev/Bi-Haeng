@@ -15,10 +15,16 @@ const GeographyDetails: React.FC<GeographyProps> = ({ geography }) => {
     <div className="grid gap-3">
       <div className="font-semibold">Geography</div>
       <dl className="grid gap-3">
-        <InfoItem label="Altitude" value={geography?.altitude || "N/A"} />
-        <InfoItem label="Direction" value={geography?.direction || "N/A"} />
-        <InfoItem label="Latitude" value={geography?.latitude || "N/A"} />
-        <InfoItem label="Longitude" value={geography?.longitude || "N/A"} />
+        <InfoItem label="Altitude" value={geography?.altitude + "m" || "N/A"} />
+        <InfoItem
+          label="Direction"
+          value={geography?.direction + "°" || "N/A"}
+        />
+        <InfoItem label="Latitude" value={geography?.latitude + "°" || "N/A"} />
+        <InfoItem
+          label="Longitude"
+          value={geography?.longitude + "°" || "N/A"}
+        />
       </dl>
     </div>
   );

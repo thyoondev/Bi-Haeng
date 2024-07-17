@@ -13,8 +13,10 @@ const SpeedDetails: React.FC<SpeedProps> = ({ speed }) => {
     <div className="grid gap-3">
       <div className="font-semibold">Speed</div>
       <dl className="grid gap-3">
-        <InfoItem label="Horizontal" value={speed?.horizontal || "N/A"} />
-        <InfoItem label="isGround" value={speed?.isGround || "N/A"} />
+        <InfoItem
+          label="Horizontal"
+          value={speed?.horizontal + " km/h" || "N/A"}
+        />
       </dl>
     </div>
   );
