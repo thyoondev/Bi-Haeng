@@ -120,7 +120,7 @@ const Map: React.FC<MapProps> = ({ flightData, arrivalAirportData }) => {
 
     if (isDifferent) {
       const lineDistance = turf.length(route.features[0]);
-      const steps = 300;
+      const steps = 500;
 
       const arc = [];
       for (let i = 0; i < steps; i++) {
