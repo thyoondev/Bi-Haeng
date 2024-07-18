@@ -6,6 +6,7 @@ import {
   useFlightData,
 } from "@/entities/flights/flights.flightRegNum";
 import Map from "@/features/map/map";
+import { APIAlert } from "@/features/overview/flightInfo.apiAlert";
 import {
   Drawer,
   DrawerContent,
@@ -62,6 +63,9 @@ const OverView = () => {
         <form className="grid w-full items-start gap-6">
           <FlightSelect setSelectedFlight={setSelectedFlight} />
           {flightData && <FlightInfo data={flightData} />}
+          <div className="absolute bottom-0 left-0">
+            <APIAlert />
+          </div>
         </form>
       </div>
 
@@ -91,7 +95,7 @@ const OverView = () => {
               </DrawerHeader>
               <form className="grid w-full items-start gap-6">
                 <FlightSelect setSelectedFlight={setSelectedFlight} />
-                {flightData && <FlightInfo data={flightData} />}
+                {flightData ? <FlightInfo data={flightData} /> : <APIAlert />}
               </form>
             </div>
           </DrawerContent>
