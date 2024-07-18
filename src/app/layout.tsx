@@ -6,6 +6,7 @@ import { ThemeProvider } from "./provider/theme-provider";
 import { ReactQueryProvider } from "./provider/react-query-provider";
 import MainLayout from "./layouts/MainLayout";
 import { RecoilProvider } from "./provider/recoil-provider";
+import { Analytics } from "@vercel/analytics/react";
 
 const defaultFont = Roboto_Mono({ weight: "400", subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
             >
               <TooltipProvider>
                 <MainLayout>{children}</MainLayout>
+                <Analytics /> {/* vercel analytics */}
               </TooltipProvider>
             </ThemeProvider>
           </RecoilProvider>
